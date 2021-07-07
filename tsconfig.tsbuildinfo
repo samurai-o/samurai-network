@@ -257,8 +257,8 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "7bd63cbdc49ec8cae5c8ba6183d25bc915dd6901dfc1337a38e2f72e603b66f5",
-        "signature": "336e6943356f60b806ca4aadfa6fa9c71f816e7746d4af88c713d88dfd1f8d53",
+        "version": "26494771c28cf0199740fc442ce5675c4d38f9eaf35115e86f2237cc155cbdc4",
+        "signature": "d5145f9e56e63f1ed7519b863e00f0ecd983ed5a1c5c68c54b450c481d191f5d",
         "affectsGlobalScope": false
       }
     },
@@ -381,29 +381,7 @@
       "./node_modules/@frade-sam/samtools/lib/set.d.ts",
       "./node_modules/@frade-sam/samtools/lib/type.d.ts",
       "./node_modules/axios/index.d.ts",
-      [
-        "./src/index.ts",
-        [
-          {
-            "file": "./src/index.ts",
-            "start": 324,
-            "length": 3,
-            "messageText": "'key' is declared but its value is never read.",
-            "category": 1,
-            "code": 6133,
-            "reportsUnnecessary": true
-          },
-          {
-            "file": "./src/index.ts",
-            "start": 778,
-            "length": 3,
-            "messageText": "'key' is declared but its value is never read.",
-            "category": 1,
-            "code": 6133,
-            "reportsUnnecessary": true
-          }
-        ]
-      ]
+      "./src/index.ts"
     ]
   },
   "version": "4.1.3"

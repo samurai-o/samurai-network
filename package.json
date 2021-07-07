@@ -1,11 +1,14 @@
 {
-  "name": "samurai-network",
-  "version": "1.0.0",
+  "name": "@samuras/samurai-network",
+  "version": "1.0.3",
   "description": "",
   "main": "lib/index.js",
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
