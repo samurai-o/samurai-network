@@ -3,6 +3,11 @@ import { isEmpty, isFunc } from '@frade-sam/samtools';
 
 export type NetworkStatusFunc<D = any> = (data: D) => D;
 
+export type NetworkOptions = {
+    readonly url?: string;
+    readonly isMock?: boolean;
+}
+
 export class Network {
     private static instance: Network;
     private _client: AxiosInstance = axios.create();
@@ -14,7 +19,7 @@ export class Network {
             const func = descriptor.value;
             descriptor.value = async function (params: any, defaultData?: any) {
                 const response = await Network.instance
-                    .client({ url, method: 'GET', params, headers })
+                    .client({ url: Network.instance.path(url), method: 'GET', params, headers })
                     .then((res) => (isEmpty(res) || isEmpty(res.data)) ? ({ ...res, data: defaultData }) : res)
                     .catch((error) => ({ ...error, data: defaultData }));
                 return func.apply(Network.instance, [params, response]);
@@ -28,7 +33,7 @@ export class Network {
         return (_target: Network, _key: string, descriptor: any) => {
             const func = descriptor.value;
             descriptor.value = async function (data: any, defaultData?: any) {
-                const response = await Network.instance.client({ url, method: 'POST', data, headers })
+                const response = await Network.instance.client({ url: Network.instance.path(url), method: 'POST', data, headers })
                     .then((res) => (isEmpty(res) || isEmpty(res.data)) ? ({ ...res, data: defaultData }) : res)
                     .catch((error) => ({ ...error, ...defaultData }));
                 return func.apply(Network.instance, [data, response]);
@@ -42,7 +47,7 @@ export class Network {
         return (_target: Network, _key: string, descriptor: any) => {
             const func = descriptor.value;
             descriptor.value = async function (data: any, defaultData?: any) {
-                const response = await Network.instance.client({ url, method: 'DELETE', data, headers })
+                const response = await Network.instance.client({ url: Network.instance.path(url), method: 'DELETE', data, headers })
                     .then((res) => (isEmpty(res) || isEmpty(res.data)) ? ({ ...res, data: defaultData }) : res)
                     .catch((error) => ({ ...error, ...defaultData }));
                 return func.apply(Network.instance, [data, response]);
@@ -52,12 +57,17 @@ export class Network {
         };
     }
 
-    constructor(private readonly url?: string) {
+    constructor(private readonly options?: NetworkOptions) {
         this.initial();
     }
 
+    private getUrl() {
+        if (!this.options) return undefined;
+        return this.options.url
+    }
+
     private initial() {
-        this._client = axios.create({ baseURL: this.url });
+        this._client = axios.create({ baseURL: this.getUrl() });
         this._client.interceptors.request.use((value) => {
             return {
                 ...value,
@@ -85,5 +95,19 @@ export class Network {
 
     get client() {
         return this._client;
+    }
+
+    get isMock() {
+        if (!this.options) return false;
+        return this.options.isMock
+    }
+
+    path(url: string) {
+        if (!url.startsWith('/')) {
+            if (!!this.isMock) return `/mock/${url}`;
+            return `/${url}`;
+        }
+        if (!!this.isMock) return `/mock${url}`;
+        return url;
     }
 }
